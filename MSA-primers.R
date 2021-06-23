@@ -9,10 +9,10 @@ primer_len=15       # length for finding potential primers
 amplion_max_len=200 # max amplicon length
 amplion_min_len=70  # min amplicon length
 div_cut=0           # initial diversity cutoff to start out with
-GC_tol=0.05         # max difference in GC%
+GC_tol=0.01       # max difference in GC%
 
 #adress of alignment
-ALNS="tdaA.aln"
+ALNS="C:/Users/milst/Desktop/Morten/aligns/tdaA.aln"
 
 #####
 #stop messing around
@@ -51,14 +51,14 @@ getAln=function(pos) {
 
 #helper function for printing primers
 printPair=function(pair){
- 
+  
   cat(paste("First:\n\n"))
   print(goodPairs[pair[1],])
   cat("\n")
   getAln(c(goodPairs[pair[1],1]))
   
   cat(paste("\nSecond:\n\n"))
-
+  
   print(goodPairs[pair[2],])
   cat("\n")
   getAln(c(goodPairs[pair[2],1]))
@@ -95,7 +95,7 @@ for( i in 1:max_len) {
 }
 
 #calculation rolling mean of diversity
-roll_means_30=rollmean(divs, k = 30)
+roll_means_30=rollmean(divs, k = 10)
 print(sum(divs)/max_len)
 
 #plotting diversity
@@ -123,6 +123,7 @@ for(j in seq(1, length(divs)-primer_len, by = 1)){
 
 #try primer combinations whilst progressively increasing
 #diversity cutoff untill a valid pair is found
+no_primers=F
 keep_going=T
 while(keep_going) {
   
@@ -149,7 +150,7 @@ while(keep_going) {
   #1/sqrt(diversity^2 + 10*deltaGC^2)
   scoreMat= matrix(-.1,nrow = NROW(goodPairs),ncol = NROW(goodPairs))
   
-  i=1;j=19
+  i=1;j=6
   #run through all primer combinations
   for(i in 1:NROW(divMat)) {
     for(j in 1:NCOL(divMat)) {
@@ -162,7 +163,7 @@ while(keep_going) {
       if(lenMat[i,j]>amplion_min_len & lenMat[i,j]<amplion_max_len & (abs(goodPairs$GC[i] - goodPairs$GC[j]) <GC_tol)) {
         divMat[i,j]   = goodPairs$divs[i] + goodPairs$divs[j]
         dGC[i,j]      = abs(goodPairs$GC[i] - goodPairs$GC[j])
-        scoreMat[i,j] = 1/((sqrt(divMat[i,j]^2) + 10*dGC[i,j]^2))
+        scoreMat[i,j] = 1/((sqrt(divMat[i,j]^2) + 10*dGC[i,j]^2)+.01)
       }
     }
   }
@@ -174,18 +175,27 @@ while(keep_going) {
   } else {
     keep_going=F
   }
+  
+  if(div_cut>3){
+    no_primers=T
+    break
+  }
 }
 
-#pheatmap(divMat,cluster_rows = F,cluster_cols = F)
-#pheatmap(dGC,cluster_rows = F,cluster_cols = F)
-pheatmap(scoreMat,cluster_rows = F,cluster_cols = F)
-
-#work out the three pairs with the highest score
-firstPair=which(scoreMat==(sort(unique(as.numeric(scoreMat)), decreasing = T)[1]),arr.ind = T)[1,]
-secPair  =which(scoreMat==(sort(unique(as.numeric(scoreMat)), decreasing = T)[2]),arr.ind = T)[2,]
-thirdPair=which(scoreMat==(sort(unique(as.numeric(scoreMat)), decreasing = T)[3]),arr.ind = T)[3,]
-
-#print them
-printPair(firstPair)
-printPair(secPair)
-printPair(thirdPair)
+if(no_primers) {
+  cat(paste("No primers found. Increase GC cutoff.\n"))
+} else {
+  #pheatmap(divMat,cluster_rows = F,cluster_cols = F)
+  #pheatmap(dGC,cluster_rows = F,cluster_cols = F)
+  pheatmap(scoreMat,cluster_rows = F,cluster_cols = F,labels_col = goodPairs$pos, labels_row = goodPairs$pos)
+  
+  unqScores=sort(unique(as.numeric(scoreMat)))[-1]
+  counter=1
+  for(i in unqScores)  {
+    cat(paste("\n***pair", counter,"\n"))
+    Pair=which(scoreMat==i,arr.ind = T)[1,]
+    printPair(Pair)
+    cat(paste("\n--------------\n\n"))
+    counter=counter+1
+  }
+}
