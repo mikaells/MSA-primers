@@ -12,7 +12,7 @@ div_cut=0           # initial diversity cutoff to start out with
 GC_tol=0.05         # max difference in GC%
 
 #adress of alignment
-ALNS="C:/Users/milst/Desktop/Morten/aligns/tdaA.aln"
+ALNS="tdaA.aln"
 
 #####
 #stop messing around
