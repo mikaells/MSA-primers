@@ -1,6 +1,6 @@
 # MSA-primers
 
-A program to suggest primers from a messy multiple sequence alignments (MSA).
+A program to suggest primers (with IUPAC bases) from a messy multiple sequence alignments (MSA). They should absolutely be looked at in CLC or similar. It is also not smart enough to calculate any sort of melting point or primer dimers.
 
 Needs an alignment, primer lenghts, amplicon size limits and a GC% difference cutoff, and will then suggest 3 candidate pairs optimized for fewest wobbly bases and lowest GC difference.
 
@@ -13,15 +13,15 @@ E.g.
     pos             kmer     divs  GC
     136 atcaaaacgatggaag 0.4155976 0.4
 
-    Consensus:	    atcaaaacgatggaag
+    Consensus:	atcaaaacgatggaag
     Substitutions:	0000010010000000
-    Primer:		    atcaaracratggaag
+    Primer:		atcaaracratggaag
 
     Second:
 
     pos             kmer     divs  GC
     31 atggatatcagtcaac 0.04786485 0.4
 
-    Consensus:	    atggatatcagtcaac
+    Consensus:	atggatatcagtcaac
     Substitutions:	0000010000000000
-    Primer:		    atggayatcagtcaac
+    Primer:		atggayatcagtcaac
