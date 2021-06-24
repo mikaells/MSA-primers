@@ -5,14 +5,14 @@ rm(list=ls());gc()
 #####
 
 #global options
-primer_len=15       # length for finding potential primers
+primer_len=14       # length for finding potential primers
 amplion_max_len=200 # max amplicon length
 amplion_min_len=70  # min amplicon length
 div_cut=0           # initial diversity cutoff to start out with
-GC_tol=0.01       # max difference in GC%
+GC_tol=0.05         # max difference in GC%
 
 #adress of alignment
-ALNS="C:/Users/milst/Desktop/Morten/aligns/tdaA.aln"
+ALNS="C:/Users/milst/Desktop/Morten/aligns_phaeo/aligns/tdaA.aln"
 
 #####
 #stop messing around
@@ -28,13 +28,23 @@ par(mar = c(2.5, 2.5, 1.8,.5), family="serif", mfrow=c(1,1),mgp = c(1.3, 0.3, 0)
 #####
 #Functions
 #####
-
+pos=142
 #Formatter function for printing alignments
 getAln=function(pos) {
+  #work out if there are wobbles
+  #looks at if the table() returns more than one element on each column
   subs=paste(apply(DNA_mat[,c(pos:(pos+primer_len))], 2,
                    function(x) length(table(x))-1 ),collapse="")
   
+  #fishing out the consensus sequence of the primer
   consPrimer=CONSENSUS[pos:(pos+primer_len)]
+  
+  #go through DNA_mat and work out how many sequences diverge from the consensus
+  subs_primer=c()
+  for(j in 0:primer_len){
+    subs_primer=c(subs_primer,sum( (consPrimer[j+1]!=as.character(DNA_mat[,pos+j]))==T))
+  }
+  
   
   degens=unlist(strsplit(subs,""))
   degPrimer=consPrimer
@@ -45,7 +55,7 @@ getAln=function(pos) {
     }
   }
   
-  cat("Consensus:\t",consPrimer,"\nSubstitutions:\t",subs,"\nPrimer:\t\t",degPrimer,"\n",sep="")
+  cat("Consensus:\t",consPrimer,"\n#bases:\t\t",subs,"\n#substitutions:\t",subs_primer, "\nPrimer:\t\t",degPrimer,"\n",sep="")
   
 }
 
