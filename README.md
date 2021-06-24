@@ -8,20 +8,27 @@ When run on tdaA.aln, the first pair will look like this:
 
 E.g.
 
+    ***pair 1 
     First:
 
-    pos             kmer     divs  GC
-    136 atcaaaacgatggaag 0.4155976 0.4
+    pos             kmer      divs  GC
+    136 136 atcaaaacgatggaag 0.4155976 0.4
 
     Consensus:	atcaaaacgatggaag
-    Substitutions:	0000010010000000
+    #wobbles:	0000010010000000
+    #substitutions:	0000050080000000
     Primer:		atcaaracratggaag
 
     Second:
 
-    pos             kmer     divs  GC
-    31 atggatatcagtcaac 0.04786485 0.4
+    pos             kmer      divs  GC
+    36  36 tatcagtcaactcaag 0.2451616 0.4
 
-    Consensus:	atggatatcagtcaac
-    Substitutions:	0000010000000000
-    Primer:		atggayatcagtcaac
+    Consensus:	tatcagtcaactcaag
+    #wobbles:	1000000000000001
+    #substitutions:	1000000000000006
+    Primer:		yatcagtcaactcaar
+
+    --------------
+
+One might then consider changing the GC-cutoff or maybe ignoring the first wobble of the second primer, since only one sequence has a divergence.
