@@ -5,14 +5,14 @@ rm(list=ls());gc()
 #####
 
 #global options
-primer_len=14       # length for finding potential primers
+primer_len=20       # length for finding potential primers
 amplion_max_len=200 # max amplicon length
 amplion_min_len=70  # min amplicon length
 div_cut=0           # initial diversity cutoff to start out with
 GC_tol=0.05         # max difference in GC%
 
 #adress of alignment
-ALNS="C:/Users/milst/Desktop/Morten/aligns_phaeo/aligns/tdaA.aln"
+ALNS="tdaA.aln"
 
 #####
 #stop messing around
@@ -55,7 +55,7 @@ getAln=function(pos) {
     }
   }
   
-  cat("Consensus:\t",consPrimer,"\n#bases:\t\t",subs,"\n#substitutions:\t",subs_primer, "\nPrimer:\t\t",degPrimer,"\n",sep="")
+  cat("Consensus:\t",consPrimer,"\n#wobbles:\t",subs,"\n#substitutions:\t",subs_primer, "\nPrimer:\t\t",degPrimer,"\n",sep="")
   
 }
 
