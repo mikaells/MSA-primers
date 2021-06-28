@@ -9,7 +9,7 @@ primer_len=20       # length for finding potential primers
 amplion_max_len=200 # max amplicon length
 amplion_min_len=70  # min amplicon length
 div_cut=0           # initial diversity cutoff to start out with
-GC_tol=0.05         # max difference in GC%
+GC_tol=0.1         # max difference in GC%
 
 #adress of alignment
 ALNS="tdaA.aln"
@@ -28,7 +28,7 @@ par(mar = c(2.5, 2.5, 1.8,.5), family="serif", mfrow=c(1,1),mgp = c(1.3, 0.3, 0)
 #####
 #Functions
 #####
-pos=142
+pos=478
 #Formatter function for printing alignments
 getAln=function(pos) {
   #work out if there are wobbles
@@ -42,7 +42,8 @@ getAln=function(pos) {
   #go through DNA_mat and work out how many sequences diverge from the consensus
   subs_primer=c()
   for(j in 0:primer_len){
-    subs_primer=c(subs_primer,sum( (consPrimer[j+1]!=as.character(DNA_mat[,pos+j]))==T))
+    temp_subs=sum( (consPrimer[j+1]!=as.character(DNA_mat[,pos+j]))==T)
+    subs_primer=c(subs_primer,ifelse(temp_subs>9,"+",temp_subs))
   }
   
   
