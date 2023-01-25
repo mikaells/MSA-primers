@@ -122,7 +122,7 @@ legend("topright", legend = "Rolling mean", col=3, lty=1)
 
 #making data frame for for Kmers/primers and their diversity
 kmers=data.frame(pos=rep(0,length(divs)-primer_len),kmer=rep("",length(divs)-primer_len), 
-                 divs=rep(0,length(divs)-primer_len),GC=rep(0,length(divs)-primer_len))
+                 divs=rep(0,length(divs)-primer_len),GC=rep(0,length(divs)-primer_len), stringsAsFactors=F)
 j=1
 for(j in seq(1, length(divs)-primer_len, by = 1)){
   kmers$pos [j] = j
